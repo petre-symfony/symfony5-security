@@ -11,11 +11,11 @@ use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
 
 class LoginFormAuthenticator extends AbstractAuthenticator {
 	public function supports(Request $request): ?bool {
-		dd('supports');
+		return $request->getPathInfo() === '/login' && $request->isMethod('POST');
 	}
 
 	public function authenticate(Request $request): PassportInterface {
-		// TODO: Implement authenticate() method.
+		dd('authenticate');
 	}
 
 	public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response {
