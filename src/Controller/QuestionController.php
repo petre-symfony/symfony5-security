@@ -16,9 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @IsGranted('ROLE_ADMIN')
- */
+
 class QuestionController extends AbstractController {
   private $logger;
   private $isDebug;
@@ -46,7 +44,7 @@ class QuestionController extends AbstractController {
 
   /**
    * @Route("/questions/new")
-   * @IsGranted('ROLE_ADMIN')
+   * @IsGranted('ROLE_USER')
    */
   public function new() {
 
