@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,11 +43,9 @@ class QuestionController extends AbstractController {
 
   /**
    * @Route("/questions/new")
+   * @IsGranted('ROLE_ADMIN')
    */
   public function new() {
-    if(!$this->IsGranted('ROLE_USER')){
-        throw $this->createAccessDeniedException('No access for you!');
-    };
 
     return new Response('Sounds like a GREAT feature for V2!');
   }
