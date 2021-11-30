@@ -43,7 +43,7 @@ class QuestionController extends AbstractController {
 
   /**
    * @Route("/questions/new")
-   * @IsGranted('ROLE_ADMIN')
+   * #[IsGranted("ROLE_ADMIN")]
    */
   public function new() {
 
