@@ -38,6 +38,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	 */
 	private $password;
 
+	private $plainPassword;
+
+	/**
+	 * @return mixed
+	 */
+	public function getPlainPassword(): ?string {
+		return $this->plainPassword;
+	}
+
+	/**
+	 * @param mixed $plainPassword
+	 */
+	public function setPlainPassword($plainPassword): self {
+		$this->plainPassword = $plainPassword;
+
+		return $this;
+	}
+
 	public function getId(): ?int {
 		return $this->id;
 	}
@@ -106,7 +124,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	 */
 	public function eraseCredentials() {
 		// If you store any temporary, sensitive data on the user, clear it here
-		// $this->plainPassword = null;
+		$this->plainPassword = null;
 	}
 
 	public function getFirstName(): ?string {
