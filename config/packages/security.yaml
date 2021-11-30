@@ -18,7 +18,9 @@ security:
     main:
       lazy: true
       provider: app_user_provider
-      custom_authenticator: App\Security\LoginFormAuthenticator
+      custom_authenticator:
+        - App\Security\LoginFormAuthenticator
+        - App\Security\DummyAuthenticator
       logout: true
 
       remember_me:
