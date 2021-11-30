@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User implements UserInterface {
+class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	/**
 	 * @ORM\Id
 	 * @ORM\GeneratedValue
@@ -32,6 +32,11 @@ class User implements UserInterface {
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	private $firstName;
+
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private $password;
 
 	public function getId(): ?int {
 		return $this->id;
@@ -81,12 +86,10 @@ class User implements UserInterface {
 	}
 
 	/**
-	 * This method can be removed in Symfony 6.0 - is not needed for apps that do not check user passwords.
-	 *
 	 * @see PasswordAuthenticatedUserInterface
 	 */
 	public function getPassword(): ?string {
-		return null;
+		return $this->password;
 	}
 
 	/**
@@ -112,6 +115,12 @@ class User implements UserInterface {
 
 	public function setFirstName(?string $firstName): self {
 		$this->firstName = $firstName;
+
+		return $this;
+	}
+
+	public function setPassword(string $password): self {
+		$this->password = $password;
 
 		return $this;
 	}
