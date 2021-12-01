@@ -52,4 +52,11 @@ class AdminController extends AbstractController {
       'chart2' => $chart2,
     ]);
   }
+
+	/**
+	 * @Route("/admin/login")
+	 */
+  public function adminLogin(){
+		return new Response('Pretend admin login page should should be public');
+  }
 }
