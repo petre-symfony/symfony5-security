@@ -47,17 +47,15 @@
 								aria-expanded="false"
 							>
 								<img
-									src="https://ui-avatars.com/api/?name=John+Doe&size=32&background=random"
-									alt="John Doe Avatar">
+									src="https://ui-avatars.com/api/?name={{ app.user.firstName|url_encode }}&size=32&background=random"
+									alt="{{ app.user.firstName }} Avatar">
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-dropdown">
 								<li>
-									<a class="dropdown-item" href="#">Log Out</a>
+									<a class="dropdown-item" href="{{ path('app_logout') }}">Log Out</a>
 								</li>
 							</ul>
 						</div>
-						{{ app.user.firstName }}
-						<a class="nav-link" href="{{ path('app_logout') }}">Logout</a>
 					{% else %}
 						<a href="{{ path('app_login') }}" class="nav-link text-blak-50">Login</a>
 						<a href="#" class="btn btn-dark">Sign up</a>
