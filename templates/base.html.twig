@@ -47,7 +47,7 @@
 								aria-expanded="false"
 							>
 								<img
-									src="https://ui-avatars.com/api/?name={{ app.user.firstName|url_encode }}&size=32&background=random"
+									src="{{ app.user.avatarUri }}"
 									alt="{{ app.user.firstName }} Avatar">
 							</button>
 							<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-dropdown">
