@@ -27,10 +27,12 @@ class MarkdownHelper {
       $this->logger->info('Meow!');
     }
 
-    if ($this->security->getUser()) {
-
+    if ($this->security->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+			$this->logger->info('Rendering markdown for {user}', [
+				'user' => $this->security->getUser()->getUserIdentifier()
+			]);
     }
-    
+
     if ($this->isDebug) {
       return $this->markdownParser->transformMarkdown($source);
     }
