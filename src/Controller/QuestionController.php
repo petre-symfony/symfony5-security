@@ -44,7 +44,7 @@ class QuestionController extends AbstractController {
 
   /**
    * @Route("/questions/new")
-   * @IsGranted('ROLE_USER')
+   * @IsGranted("ROLE_USER")
    */
   public function new() {
 
