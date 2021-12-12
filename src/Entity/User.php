@@ -4,12 +4,14 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	/**
@@ -150,16 +152,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 	/**
 	 * @Groups("user:read")
 	 */
-	public function getAvatarUri(int $size = 32): string{
+	public function getAvatarUri(int $size = 32): string {
 		//https://ui-avatars.com/api/?name={{ app.user.firstName|url_encode }}&size=32&background=random
 		return 'https://ui-avatars.com/api/?' . http_build_query([
-			'name' => $this->getDisplayName(),
-			'size' => $size,
-			'background' => 'random'
-		]);
+				'name' => $this->getDisplayName(),
+				'size' => $size,
+				'background' => 'random'
+			]);
 	}
 
-	public function getDisplayName(): string{
+	public function getDisplayName(): string {
 		return $this->getFirstName() ?: $this->getEmail();
 	}
 }
