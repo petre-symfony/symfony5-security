@@ -51,4 +51,13 @@ class AnswerController extends BaseController {
 
     return $this->json(['votes' => $answer->getVotes()]);
   }
+
+  /**
+   * @Route("/admin/answers")
+   */
+  public function adminAnswers(){
+  	$this->denyAccessUnlessGranted('ROLE_ANSWER_ADMIN');
+
+		return new Response('Pretend answers admin page');
+  }
 }
