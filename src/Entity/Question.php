@@ -15,184 +15,200 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Entity(repositoryClass=QuestionRepository::class)
  */
 class Question {
-  use TimestampableEntity;
+	use TimestampableEntity;
 
-  /**
-   * @ORM\Id()
-   * @ORM\GeneratedValue()
-   * @ORM\Column(type="integer")
-   */
-  private $id;
+	/**
+	 * @ORM\Id()
+	 * @ORM\GeneratedValue()
+	 * @ORM\Column(type="integer")
+	 */
+	private $id;
 
-  /**
-   * @ORM\Column(type="string", length=255)
-   */
-  private $name;
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private $name;
 
-  /**
-   * @ORM\Column(type="string", length=100, unique=true)
-   * @Gedmo\Slug(fields={"name"})
-   */
-  private $slug;
+	/**
+	 * @ORM\Column(type="string", length=100, unique=true)
+	 * @Gedmo\Slug(fields={"name"})
+	 */
+	private $slug;
 
-  /**
-   * @ORM\Column(type="text")
-   */
-  private $question;
+	/**
+	 * @ORM\Column(type="text")
+	 */
+	private $question;
 
-  /**
-   * @ORM\Column(type="datetime", nullable=true)
-   */
-  private $askedAt;
+	/**
+	 * @ORM\Column(type="datetime", nullable=true)
+	 */
+	private $askedAt;
 
-  /**
-   * @ORM\Column(type="integer")
-   */
-  private $votes = 0;
+	/**
+	 * @ORM\Column(type="integer")
+	 */
+	private $votes = 0;
 
-  /**
-   * @ORM\OneToMany(targetEntity=Answer::class, mappedBy="question", fetch="EXTRA_LAZY")
-   * @ORM\OrderBy({"createdAt" = "DESC"})
-   */
-  private $answers;
+	/**
+	 * @ORM\OneToMany(targetEntity=Answer::class, mappedBy="question", fetch="EXTRA_LAZY")
+	 * @ORM\OrderBy({"createdAt" = "DESC"})
+	 */
+	private $answers;
 
-  /**
-   * @ORM\OneToMany(targetEntity=QuestionTag::class, mappedBy="question")
-   */
-  private $questionTags;
+	/**
+	 * @ORM\OneToMany(targetEntity=QuestionTag::class, mappedBy="question")
+	 */
+	private $questionTags;
 
-  public function __construct() {
-    $this->answers = new ArrayCollection();
-    $this->questionTags = new ArrayCollection();
-  }
+	/**
+	 * @ORM\ManyToOne(targetEntity=User::class, inversedBy="questions")
+	 * @ORM\JoinColumn(nullable=false)
+	 */
+	private $owner;
 
-  public function getId(): ?int {
-    return $this->id;
-  }
+	public function __construct() {
+		$this->answers = new ArrayCollection();
+		$this->questionTags = new ArrayCollection();
+	}
 
-  public function getName(): ?string {
-    return $this->name;
-  }
+	public function getId(): ?int {
+		return $this->id;
+	}
 
-  public function setName(string $name): self {
-    $this->name = $name;
+	public function getName(): ?string {
+		return $this->name;
+	}
 
-    return $this;
-  }
+	public function setName(string $name): self {
+		$this->name = $name;
 
-  public function getSlug(): ?string {
-    return $this->slug;
-  }
+		return $this;
+	}
 
-  public function setSlug(string $slug): self {
-    $this->slug = $slug;
+	public function getSlug(): ?string {
+		return $this->slug;
+	}
 
-    return $this;
-  }
+	public function setSlug(string $slug): self {
+		$this->slug = $slug;
 
-  public function getQuestion(): ?string {
-    return $this->question;
-  }
+		return $this;
+	}
 
-  public function setQuestion(string $question): self {
-    $this->question = $question;
+	public function getQuestion(): ?string {
+		return $this->question;
+	}
 
-    return $this;
-  }
+	public function setQuestion(string $question): self {
+		$this->question = $question;
 
-  public function getAskedAt(): ?\DateTimeInterface {
-    return $this->askedAt;
-  }
+		return $this;
+	}
 
-  public function setAskedAt(?\DateTimeInterface $askedAt): self {
-    $this->askedAt = $askedAt;
+	public function getAskedAt(): ?\DateTimeInterface {
+		return $this->askedAt;
+	}
 
-    return $this;
-  }
+	public function setAskedAt(?\DateTimeInterface $askedAt): self {
+		$this->askedAt = $askedAt;
 
-  public function getVotes(): int {
-    return $this->votes;
-  }
+		return $this;
+	}
 
-  public function getVotesString(): string {
-    $prefix = $this->getVotes() >= 0 ? '+' : '-';
+	public function getVotes(): int {
+		return $this->votes;
+	}
 
-    return sprintf('%s %d', $prefix, abs($this->getVotes()));
-  }
+	public function getVotesString(): string {
+		$prefix = $this->getVotes() >= 0 ? '+' : '-';
 
-  public function setVotes(int $votes): self {
-    $this->votes = $votes;
+		return sprintf('%s %d', $prefix, abs($this->getVotes()));
+	}
 
-    return $this;
-  }
+	public function setVotes(int $votes): self {
+		$this->votes = $votes;
 
-  public function upVote(): self {
-    $this->votes++;
+		return $this;
+	}
 
-    return $this;
-  }
+	public function upVote(): self {
+		$this->votes++;
 
-  public function downVote(): self {
-    $this->votes--;
+		return $this;
+	}
 
-    return $this;
-  }
+	public function downVote(): self {
+		$this->votes--;
 
-  /**
-   * @return Collection|Answer[]
-   */
-  public function getAnswers(): Collection {
-    return $this->answers;
-  }
+		return $this;
+	}
 
-  public function getApprovedAnswers(): Collection {
-    return $this->answers->matching(AnswerRepository::createApprovedCriteria());
-  }
+	/**
+	 * @return Collection|Answer[]
+	 */
+	public function getAnswers(): Collection {
+		return $this->answers;
+	}
 
-  public function addAnswer(Answer $answer): self {
-    if (!$this->answers->contains($answer)) {
-      $this->answers[] = $answer;
-      $answer->setQuestion($this);
-    }
+	public function getApprovedAnswers(): Collection {
+		return $this->answers->matching(AnswerRepository::createApprovedCriteria());
+	}
 
-    return $this;
-  }
+	public function addAnswer(Answer $answer): self {
+		if (!$this->answers->contains($answer)) {
+			$this->answers[] = $answer;
+			$answer->setQuestion($this);
+		}
 
-  public function removeAnswer(Answer $answer): self {
-    if ($this->answers->removeElement($answer)) {
-      // set the owning side to null (unless already changed)
-      if ($answer->getQuestion() === $this) {
-        $answer->setQuestion(null);
-      }
-    }
+		return $this;
+	}
 
-    return $this;
-  }
+	public function removeAnswer(Answer $answer): self {
+		if ($this->answers->removeElement($answer)) {
+			// set the owning side to null (unless already changed)
+			if ($answer->getQuestion() === $this) {
+				$answer->setQuestion(null);
+			}
+		}
 
-  /**
-   * @return Collection|QuestionTag[]
-   */
-  public function getQuestionTags(): Collection {
-    return $this->questionTags;
-  }
+		return $this;
+	}
 
-  public function addQuestionTag(QuestionTag $questionTag): self {
-    if (!$this->questionTags->contains($questionTag)) {
-      $this->questionTags[] = $questionTag;
-      $questionTag->setQuestion($this);
-    }
+	/**
+	 * @return Collection|QuestionTag[]
+	 */
+	public function getQuestionTags(): Collection {
+		return $this->questionTags;
+	}
 
-    return $this;
-  }
+	public function addQuestionTag(QuestionTag $questionTag): self {
+		if (!$this->questionTags->contains($questionTag)) {
+			$this->questionTags[] = $questionTag;
+			$questionTag->setQuestion($this);
+		}
 
-  public function removeQuestionTag(QuestionTag $questionTag): self {
-    if ($this->questionTags->removeElement($questionTag)) {
-      // set the owning side to null (unless already changed)
-      if ($questionTag->getQuestion() === $this) {
-        $questionTag->setQuestion(null);
-      }
-    }
+		return $this;
+	}
 
-    return $this;
-  }
+	public function removeQuestionTag(QuestionTag $questionTag): self {
+		if ($this->questionTags->removeElement($questionTag)) {
+			// set the owning side to null (unless already changed)
+			if ($questionTag->getQuestion() === $this) {
+				$questionTag->setQuestion(null);
+			}
+		}
+
+		return $this;
+	}
+
+	public function getOwner(): ?User {
+		return $this->owner;
+	}
+
+	public function setOwner(?User $owner): self {
+		$this->owner = $owner;
+
+		return $this;
+	}
 }
