@@ -38,8 +38,12 @@ class RegistrationController extends AbstractController {
 			$signatureComponent = $verifyEmailHelper->generateSignature(
 				'app_verify_email',
 				$user->getId(),
-				$user->getEmail()
+				$user->getEmail(),
+				['id' => $user->getId()]
 			);
+
+			// TODO: in a real app, send this as an email!
+			$this->addFlash('success', 'Confirm your email at: '.$signatureComponent->getSignedUrl());
 
 			$this->redirectToRoute('app_homepage');
 		}
