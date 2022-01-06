@@ -6,9 +6,17 @@ use App\Entity\Question;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class QuestionVoter extends Voter {
+	private Security $security;
+
+	public function __construct(Security $security){
+
+		$this->security = $security;
+	}
+
 	protected function supports(string $attribute, $subject): bool {
 		// replace with your own logic
 		// https://symfony.com/doc/current/security/voters.html
@@ -28,7 +36,10 @@ class QuestionVoter extends Voter {
 			throw new \Exception('Wrong type somehow passed');
 		}
 
-		// ... (check conditions and return true to grant permission) ...
+		if ($this->security->isGranted('ROLE_ADMIN')) {
+			return true;
+		}
+		
 		switch ($attribute) {
 			case 'EDIT':
 				return $user === $subject->getOwner();
