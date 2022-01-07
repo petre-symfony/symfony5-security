@@ -7,6 +7,7 @@ use App\Security\AccountNotVerifiedAuthenticationException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\UserPassportInterface;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
+use Symfony\Component\Security\Http\Event\LoginFailureEvent;
 
 class CheckVerifiedUserSubscriber implements EventSubscriberInterface {
 	public function onCheckPassport(CheckPassportEvent $event) {
@@ -29,9 +30,14 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface {
 		}
 	}
 
+	public function onFailureEvent(LoginFailureEvent $event){
+		dd($event);
+	}
+
 	public static function getSubscribedEvents() {
 		return [
-			CheckPassportEvent::class => ['onCheckPassport', -10 ]
+			CheckPassportEvent::class => ['onCheckPassport', -10 ],
+			LoginFailureEvent::class => 'onFailureEvent'
 		];
 	}
 
