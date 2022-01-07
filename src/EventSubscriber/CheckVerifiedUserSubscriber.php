@@ -3,8 +3,8 @@
 namespace App\EventSubscriber;
 
 use App\Entity\User;
+use App\Security\AccountNotVerifiedAuthenticationException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Http\Authenticator\Passport\UserPassportInterface;
 use Symfony\Component\Security\Http\Event\CheckPassportEvent;
 
@@ -23,7 +23,7 @@ class CheckVerifiedUserSubscriber implements EventSubscriberInterface {
 		}
 
 		if(!$user->getIsVerified()){
-			throw new CustomUserMessageAuthenticationException(
+			throw new AccountNotVerifiedAuthenticationException(
 				'Please verify your account before logging in'
 			);
 		}
