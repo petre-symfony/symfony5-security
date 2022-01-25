@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Totp\TotpAuthenticatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Endroid\QrCode\Builder\Builder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -35,12 +35,25 @@ class SecurityController extends BaseController {
 	public function enable2fa(TotpAuthenticatorInterface $totpAuthenticator, EntityManagerInterface $entityManager) {
 		$user = $this->getUser();
 
-		if(!$user->isTotpAuthenticationEnabled()){
+		if (!$user->isTotpAuthenticationEnabled()) {
 			$user->setTotpSecret($totpAuthenticator->generateSecret());
 
 			$entityManager->flush();
 		}
 
-		dd($totpAuthenticator->getQRContent($user));
+		return $this->render('security/enable2fa.html.twig');
+	}
+
+	/**
+	 * @Route("/authentication/2fa/qr-code", name="app_qr_code")
+	 * @IsGranted("ROLE_USER")
+	 */
+	public function displayGoogleAuthenticatorQrCode(TotpAuthenticatorInterface $totpAuthenticator) {
+		$qrCodeContent = $totpAuthenticator->getQRContent($this->getUser());
+		$result = Builder::create()
+			->data($qrCodeContent)
+			->build();
+
+		return new Response($result->getString(), 200, ['Content-Type' => 'image/png']);
 	}
 }
