@@ -33,8 +33,8 @@ security:
         enable_csrf: true
 
       two_factor:
-        auth_form_path: /2fa_login
-        check_path: /2fa_login_check
+        auth_form_path: /2fa
+        check_path: /2fa_check
       logout: true
 
       switch_user: true
